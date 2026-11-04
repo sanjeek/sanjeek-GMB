@@ -1,0 +1,1 @@
+{"name":"gmb-curtains-blinds","version":"1.0.0","private":true,"description":"GMB Curtains & Blinds website proposal","scripts":{"build":"node build.mjs","test":"node test.mjs","dev":"node dev.mjs"},"engines":{"node":">=20"}}
