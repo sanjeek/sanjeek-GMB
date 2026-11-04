@@ -1,6 +1,6 @@
 # GMB Curtains & Blinds
 
-A complete, responsive website proposal for GMB, prepared for **sanjeek/GMB** and **Vercel**. The design uses warm ivory, burgundy, editorial serif typography and an image-led collection layout.
+A complete, responsive website proposal for GMB, prepared for **sanjeek/sanjeek-GMB** and **Vercel**. The design uses warm ivory, burgundy, editorial serif typography and an image-led collection layout.
 
 ## Included
 
@@ -26,7 +26,7 @@ Open http://localhost:3000. The local contact route deliberately returns unavail
 
 ## Deploy to Vercel
 
-1. Create an empty `sanjeek/GMB` repository and upload / push this source.
+1. Create an empty `sanjeek/sanjeek-GMB` repository and upload / push this source.
 2. Import that repository in Vercel. Framework preset: **Other**.
 3. Build command: `npm run build`. Output directory: `dist`. These are also set in `vercel.json`.
 4. Keep `INDEX_SITE=false` for the proposal. Vercel will publish a review URL.
@@ -63,4 +63,4 @@ The privacy page is draft proposal information. The business must confirm its fi
 
 `npm test` checks the nine generated pages, internal links, unique titles, one H1 per page, metadata, structured data and image accessibility attributes. It also checks contact API method/origin/input rejection, missing configuration, provider success/failure and HTML escaping.
 
-Visual browser QA and a live email delivery test remain necessary before business launch. The current environment has no connected browser QA tool. Vercel requires renewed login authorisation, and `sanjeek/GMB` must be created and granted to the GitHub connection before upload.
+Visual browser QA and a live email delivery test remain necessary before business launch. The current environment has no connected browser QA tool. Source has been uploaded to `sanjeek/sanjeek-GMB`. Vercel deployment requires confirmed login authorisation or repository import in the Vercel dashboard.

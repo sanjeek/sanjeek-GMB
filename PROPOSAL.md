@@ -24,4 +24,4 @@ Visitors can call directly, plan a showroom visit or request a free measure and 
 - Configure the approved domain, production indexing, URL redirects and Search Console.
 
 ## Handover
-Source repository intended: sanjeek/GMB. Hosting intended: Vercel. Includes source code, deployment configuration, environment variable template, automated checks and setup documentation. Pricing, a delivery schedule and maintenance terms can be added to the commercial proposal separately.
+Source repository intended: sanjeek/sanjeek-GMB. Hosting intended: Vercel. Includes source code, deployment configuration, environment variable template, automated checks and setup documentation. Pricing, a delivery schedule and maintenance terms can be added to the commercial proposal separately.
