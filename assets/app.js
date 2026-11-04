@@ -18,3 +18,36 @@ form.addEventListener('submit',async event=>{event.preventDefault();if(!form.rep
 const body=`Name: ${enquiry.name}\nPhone: ${enquiry.phone}\nEmail: ${enquiry.email}\nSuburb/postcode: ${enquiry.suburb}\nInterested in: ${enquiry.products.join(', ')||'Advice needed'}\nConsultation: ${enquiry.consultation}\n\n${enquiry.message}`;
 document.querySelector('#email-draft').href='mailto:info@gmbcurtainsandblinds.com.au?subject='+encodeURIComponent('Website enquiry - '+enquiry.name)+'&body='+encodeURIComponent(body);
 button.disabled=true;status.textContent='Sending your enquiry…';fallback.hidden=true;try{const response=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(enquiry),signal:AbortSignal.timeout(15000)});const result=await response.json();if(!response.ok||result.ok!==true)throw new Error(result.error||'Delivery unavailable');status.textContent='Thank you. Your enquiry has been sent to the GMB team. If you need to reach us sooner, call 0426 598 500.';form.reset();}catch(error){status.textContent='Your enquiry has not been sent online. Please use the email option below or call 0426 598 500.';fallback.hidden=false;}finally{button.disabled=false;}});}
+
+// Motion is an enhancement: content stays visible if JavaScript is unavailable.
+const motionPreference=window.matchMedia('(prefers-reduced-motion: reduce)');
+const homeHero=document.querySelector('.hero');
+const carousel=document.querySelector('.hero-carousel');
+if(carousel){
+ const slides=[...carousel.querySelectorAll('.hero-slide')];
+ const controls=carousel.querySelector('.carousel-controls');
+ const dots=[...carousel.querySelectorAll('[data-slide-to]')];
+ const pause=carousel.querySelector('.carousel-pause');
+ const status=carousel.querySelector('.carousel-status');
+ const count=document.querySelector('.hero-slide-count');
+ const destination=document.querySelector('.hero-image-link');
+ let current=0,timer=null,userPaused=false,hovered=false,focused=false,inView=true,changeId=0;
+ const stop=()=>{clearTimeout(timer);timer=null;};
+ const shouldRotate=()=>!motionPreference.matches&&!userPaused&&!hovered&&!focused&&inView&&!document.hidden;
+ function sync(){stop();const rotating=shouldRotate();carousel.classList.toggle('is-paused',!rotating);carousel.classList.toggle('motion-enabled',!motionPreference.matches);pause.setAttribute('aria-label',userPaused?'Resume image rotation':'Pause image rotation');pause.firstElementChild.textContent=userPaused?'▶':'Ⅱ';pause.hidden=motionPreference.matches;if(rotating)timer=setTimeout(()=>show((current+1)%slides.length,false),7000);}
+ async function show(index,manual){if(index===current){if(manual){userPaused=true;sync();}return;}const request=++changeId;stop();const image=slides[index].querySelector('img');image.loading='eager';try{if(!image.complete)await image.decode();if(!image.naturalWidth)throw new Error('Image unavailable');}catch{if(request===changeId){sync();}return;}if(request!==changeId)return;if(!manual&&!shouldRotate()){sync();return;}slides[current].classList.remove('is-active');slides[current].setAttribute('aria-hidden','true');current=index;slides[current].classList.add('is-active');slides[current].setAttribute('aria-hidden','false');dots.forEach((dot,i)=>dot.setAttribute('aria-pressed',String(i===current)));count.textContent=String(current+1).padStart(2,'0')+' / 04';destination.href=slides[current].dataset.url;destination.firstElementChild.textContent=slides[current].dataset.title;if(manual){userPaused=true;status.textContent='Image '+(current+1)+' of '+slides.length+': '+slides[current].dataset.title;}sync();}
+ controls.hidden=false;
+ dots.forEach(dot=>dot.addEventListener('click',()=>show(Number(dot.dataset.slideTo),true)));
+ pause.addEventListener('click',()=>{userPaused=!userPaused;sync();});
+ carousel.addEventListener('mouseenter',()=>{hovered=true;sync();});carousel.addEventListener('mouseleave',()=>{hovered=false;sync();});
+ const imageArea=carousel.closest('.hero-image');imageArea.addEventListener('focusin',()=>{focused=true;sync();});imageArea.addEventListener('focusout',event=>{if(!imageArea.contains(event.relatedTarget)){focused=false;sync();}});
+ document.addEventListener('visibilitychange',sync);motionPreference.addEventListener('change',sync);
+ if('IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>{inView=entries[0].isIntersecting;sync();},{threshold:.15});observer.observe(carousel);}
+ if(!motionPreference.matches)homeHero.classList.add('motion-ready');sync();
+}
+if(homeHero&&'IntersectionObserver'in window){
+ const targets=[...document.querySelectorAll('.collection .section-heading,.collection-card,.story-copy,.process-title,.steps article,.faq-section>div,.showroom-bar')];
+ const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target);}});},{threshold:.08,rootMargin:'0px 0px -25px 0px'});
+ if(!motionPreference.matches)targets.forEach((element,index)=>{if(element.getBoundingClientRect().top>window.innerHeight){element.classList.add('reveal-ready');element.style.setProperty('--reveal-delay',(index%2)*90+'ms');observer.observe(element);}});
+ motionPreference.addEventListener('change',event=>{if(event.matches){observer.disconnect();targets.forEach(element=>element.classList.add('is-visible'));homeHero.classList.remove('motion-ready');}});
+}
