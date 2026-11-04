@@ -63,4 +63,4 @@ The privacy page is draft proposal information. The business must confirm its fi
 
 `npm test` checks the nine generated pages, internal links, unique titles, one H1 per page, metadata, structured data and image accessibility attributes. It also checks contact API method/origin/input rejection, missing configuration, provider success/failure and HTML escaping.
 
-Visual browser QA and a live email delivery test remain necessary before business launch. The current environment had no connected browser QA tool, usable Vercel credentials, or accessible `sanjeek/GMB` repository at build time.
+Visual browser QA and a live email delivery test remain necessary before business launch. The current environment has no connected browser QA tool. Vercel requires renewed login authorisation, and `sanjeek/GMB` must be created and granted to the GitHub connection before upload.
