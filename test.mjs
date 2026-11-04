@@ -4,6 +4,13 @@ import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url);
 const handler=require('./api/contact.js');
 const files=fs.readdirSync('dist').filter(x=>x.endsWith('.html')&&x!=='404.html');
+const home=fs.readFileSync('dist/index.html','utf8');
+assert.ok(!home.includes('class="trust-strip"'),'Requested trust strip must be removed');
+assert.ok(!home.includes('class="hero-note"'),'Small hero badge must be removed');
+assert.ok(!home.includes('↗'),'Arrows must use SVG rather than emoji');
+assert.ok(home.includes('/assets/refinement.css'),'Editorial stylesheet must load');
+assert.ok(home.includes('/assets/interior-1200.webp'),'Opening image must use the new curtain interior');
+for(const font of ['InstrumentSerif-Regular.ttf','InstrumentSerif-Italic.ttf','DMSans.ttf'])assert.ok(fs.existsSync('dist/assets/fonts/'+font));
 const titles=new Set();
 for(const file of files){const html=fs.readFileSync('dist/'+file,'utf8');assert.equal((html.match(/<h1>/g)||[]).length,1,`${file} must have one h1`);assert.ok(html.includes('lang="en-AU"'));assert.ok(html.includes('noindex,nofollow'));const title=html.match(/<title>(.*?)<\/title>/)[1];assert.ok(!titles.has(title),'Titles must be unique');titles.add(title);assert.match(html,/<meta name="description" content="[^"]+">/);assert.match(html,/<link rel="canonical"/);const schema=JSON.parse(html.match(/<script type="application\/ld\+json">(.*?)<\/script>/s)[1]);assert.ok(schema.some(x=>x['@type']==='HomeGoodsStore'));for(const match of html.matchAll(/href="(\/[^"#?]*)(?:[?#][^"]*)?"/g)){const href=match[1];const target=href==='/'?'dist/index.html':href.includes('.')?'dist'+href:'dist'+href+'.html';assert.ok(fs.existsSync(target),`Broken internal link ${href} in ${file}`);}for(const tag of html.matchAll(/<img\b[^>]*>/g)){assert.match(tag[0],/alt="[^"]+"/);assert.match(tag[0],/width="\d+"/);assert.match(tag[0],/height="\d+"/);}}
 function response(){return{code:200,headers:{},setHeader(k,v){this.headers[k]=v},status(code){this.code=code;return this},json(body){this.body=body;return this}}}

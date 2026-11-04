@@ -69,3 +69,7 @@ Visual browser QA and a live email delivery test remain necessary before busines
 
 - [Website proposal (PDF)](docs/GMB-Website-Proposal.pdf)
 - [Website content review (PDF)](docs/GMB-Website-Review.pdf)
+
+## Editorial design refinement
+
+Self-hosted Instrument Serif and DM Sans fonts use the included OFL licences in `assets/fonts`. The opening curtain interior is an AI-generated illustrative concept, optimised as WebP; it is not a completed GMB installation. Other room images remain illustrative Unsplash references. The four-item trust strip has been removed. Mobile supporting copy and primary buttons use larger reading sizes.
